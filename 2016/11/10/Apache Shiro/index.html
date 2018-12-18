@@ -1,0 +1,1190 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-EN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,权限控制," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="权限控制和用户认证在管理系统中是很常见也很重要的一块，根据系统中使用到的Apache Shiro安全框架加以总结。Apache Shiro是一款强大、灵活的开源安全管理框架，以十分优雅的方式处理authentication（身份验证）、authorization（授权）、Session Management（会话管理）、Cryptography（安全数据加密）、 Web Integration w">
+<meta name="keywords" content="Java,权限控制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache Shiro">
+<meta property="og:url" content="https://leahshi.github.io/2016/11/10/Apache Shiro/index.html">
+<meta property="og:site_name" content="Leah&#39;Blog">
+<meta property="og:description" content="权限控制和用户认证在管理系统中是很常见也很重要的一块，根据系统中使用到的Apache Shiro安全框架加以总结。Apache Shiro是一款强大、灵活的开源安全管理框架，以十分优雅的方式处理authentication（身份验证）、authorization（授权）、Session Management（会话管理）、Cryptography（安全数据加密）、 Web Integration w">
+<meta property="og:locale" content="zh-EN">
+<meta property="og:updated_time" content="2018-04-02T11:43:54.433Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Apache Shiro">
+<meta name="twitter:description" content="权限控制和用户认证在管理系统中是很常见也很重要的一块，根据系统中使用到的Apache Shiro安全框架加以总结。Apache Shiro是一款强大、灵活的开源安全管理框架，以十分优雅的方式处理authentication（身份验证）、authorization（授权）、Session Management（会话管理）、Cryptography（安全数据加密）、 Web Integration w">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://leahshi.github.io/2016/11/10/Apache Shiro/"/>
+
+
+
+
+
+  <title> Apache Shiro | Leah'Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-EN">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leah'Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">越努力，越幸运</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://leahshi.github.io/2016/11/10/Apache Shiro/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Leah Shi">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Leah'Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Leah'Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Apache Shiro
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-10T13:50:37+08:00">
+                2016-11-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/work/" itemprop="url" rel="index">
+                    <span itemprop="name">work</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/11/10/Apache Shiro/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count fb-comments-count" data-href="https://leahshi.github.io/2016/11/10/Apache Shiro/" itemprop="commentCount">0</span> comments
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>权限控制和用户认证在管理系统中是很常见也很重要的一块，根据系统中使用到的Apache Shiro安全框架加以总结。<br>Apache Shiro是一款强大、灵活的开源安全管理框架，以十分优雅的方式处理authentication（身份验证）、authorization（授权）、<br>Session Management（会话管理）、Cryptography（安全数据加密）、 Web Integration web 系统集成等…</p>
+<a id="more"></a>
+<h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>任何的权限控制，大致分为粗粒度的URL级别和细粒度方法级别，在shiro中也不例外。<br>在shiro中，URL级别的权限控制其实现方式是有一个shiroFilter过滤器来实现；<br>而细粒度的权限控制具体是由一个@RequiresPermissions(value = {“”,””})注解实现，其本质还是aop面向切面的思想，返回代理对象，但是在shiro中必须要使用cglib的动态代理<br>原因是因为jdk动态代理，代理对象和原对象实现同一个接口，相当于兄弟关系，所以注解会失效；而采用cglib方式，代理对象和原对象是有继承关系的。</p>
+<h2 id="二、使用shiro实现用户身份验证"><a href="#二、使用shiro实现用户身份验证" class="headerlink" title="二、使用shiro实现用户身份验证"></a>二、使用shiro实现用户身份验证</h2><h3 id="2-1、需求："><a href="#2-1、需求：" class="headerlink" title="2.1、需求："></a>2.1、需求：</h3><p>用户未登录状态无法访问其他页面，只能跳转登录页</p>
+<h3 id="2-2、实现："><a href="#2-2、实现：" class="headerlink" title="2.2、实现："></a>2.2、实现：</h3><p>1、导入jar包<br>题主使用的maven坐标，直接引入shiro-all，在<a href="http://shiro.apache.org/download.html" target="_blank" rel="noopener">官网</a>中详细介绍了其他jar包的作用，基本上所有jar包都有涉及，所以直接引入一个总的jar包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.apache.shiro&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;shiro-all&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;$&#123;shiro.version&#125;&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<p>2、配置web.xml<br>上面提到shiro的粗粒度URL权限控制是基于Filter的，所以需要在web.xml文件里配置一个shiroFilter的过滤器（注意名称必须为这个，如果项目中引入了struts的过滤器，需要将shiroFilter放在其上，struts才不会拦截这个资源）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- shiro 权限控制 --&gt;</span><br><span class="line">&lt;filter&gt;</span><br><span class="line">	&lt;filter-name&gt;shiroFilter&lt;/filter-name&gt;</span><br><span class="line">	&lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class&gt;</span><br><span class="line">&lt;/filter&gt;</span><br><span class="line">&lt;filter-mapping&gt;</span><br><span class="line">	&lt;filter-name&gt;shiroFilter&lt;/filter-name&gt;</span><br><span class="line">	&lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br><span class="line">&lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure></p>
+<p>3、配置spring配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">	xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;</span><br><span class="line">	xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">	xmlns:jdbc=&quot;http://www.springframework.org/schema/jdbc&quot; xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;</span><br><span class="line">	xmlns:jpa=&quot;http://www.springframework.org/schema/data/jpa&quot; xmlns:task=&quot;http://www.springframework.org/schema/task&quot;</span><br><span class="line">	xsi:schemaLocation=&quot;</span><br><span class="line">		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd</span><br><span class="line">		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd</span><br><span class="line">		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd</span><br><span class="line">		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd</span><br><span class="line">		http://www.springframework.org/schema/data/jpa </span><br><span class="line">		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	&lt;!-- </span><br><span class="line">		配置核心过滤器:</span><br><span class="line">			注意：此处的id和web.xml中的过滤器名称要保持一致</span><br><span class="line">	 --&gt;</span><br><span class="line">	&lt;bean id=&quot;shiroFilter&quot; class=&quot;org.apache.shiro.spring.web.ShiroFilterFactoryBean&quot;&gt;</span><br><span class="line">		&lt;!-- 安全管理器 --&gt;</span><br><span class="line">		&lt;property name=&quot;securityManager&quot; ref=&quot;securityManager&quot; /&gt;</span><br><span class="line">		&lt;!-- 未认证 --&gt;</span><br><span class="line">		&lt;property name=&quot;loginUrl&quot; value=&quot;/login.html&quot; /&gt;</span><br><span class="line">		&lt;!-- 已登录 --&gt;</span><br><span class="line">		&lt;property name=&quot;successUrl&quot; value=&quot;/index.html&quot; /&gt;</span><br><span class="line">		&lt;!-- 认证后无权限 --&gt;</span><br><span class="line">		&lt;property name=&quot;unauthorizedUrl&quot; value=&quot;/unauthorized.html&quot; /&gt;</span><br><span class="line">		&lt;!-- </span><br><span class="line">			权限控制：角色 用户 权限 URL控制过滤器规则: </span><br><span class="line">				anon: 未登录状态也可以访问的资源 </span><br><span class="line">				authc:已登录状态访问的资源 </span><br><span class="line">				roles：特定角色才能访问 </span><br><span class="line">				perms：特定权限才能访问 </span><br><span class="line">				user：特定用户才能访问 </span><br><span class="line">				port 需要特定端口才能访问 </span><br><span class="line">				reset 根据指定</span><br><span class="line">				HTTP 请求访问才能访问 </span><br><span class="line">		--&gt;</span><br><span class="line">		&lt;property name=&quot;filterChainDefinitions&quot;&gt;</span><br><span class="line">			&lt;value&gt;</span><br><span class="line">				&lt;!-- &quot;**&quot; 表示所有层级目录 --&gt;</span><br><span class="line">				/css/** = anon</span><br><span class="line">				/js/** = anon</span><br><span class="line">				/images/** = anon</span><br><span class="line">				/login.html* = anon</span><br><span class="line">				/services/** = anon</span><br><span class="line">				/validatecode.jsp* = anon</span><br><span class="line">				/userLogin = anon</span><br><span class="line">				&lt;!-- 只有在权限表中关键字中为 courier:list 的角色才有权限查看该页面 --&gt;</span><br><span class="line">				/pages/base/courier.html* = perms[courier:list]</span><br><span class="line">				&lt;!-- 只有在角色表中关键字为base的角色才有权限查看该页面 --&gt;</span><br><span class="line">				/pages/base/area.html* = roles[base]</span><br><span class="line">				/** = authc</span><br><span class="line">			&lt;/value&gt;</span><br><span class="line">		&lt;/property&gt;</span><br><span class="line">	&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	&lt;!-- 配置安全管理器 --&gt;</span><br><span class="line">	&lt;bean id=&quot;securityManager&quot; class=&quot;org.apache.shiro.web.mgt.DefaultWebSecurityManager&quot;&gt;</span><br><span class="line">		&lt;property name=&quot;realm&quot; ref=&quot;uhoemRealm&quot; /&gt;</span><br><span class="line">	&lt;/bean&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;!-- 配置realm --&gt;</span><br><span class="line">	&lt;bean id=&quot;uhoemRealm&quot; class=&quot;com.leahshi.realm.uhoemRealm&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">	&lt;!-- 生命周期后处理器 --&gt;</span><br><span class="line">	&lt;bean id=&quot;lifecycleBeanPostProcessor&quot; class=&quot;org.apache.shiro.spring.LifecycleBeanPostProcessor&quot;&gt;&lt;/bean&gt; </span><br><span class="line">	</span><br><span class="line">&lt;/beans&gt;</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">以上配置文件中，需要配置shiroFilter，该名称和web.xml中名称一致。这个对象注入了安全管理器这个核心对象，并且配置了定义了权限控制的一些规则，</span><br><span class="line">未登录状态下跳转页面，登录成功后的跳转页面，权限不足的页面，以及配置了一些特定用户可以访问的资源以及权限信息【重点，见注释】</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">4、表现层UserAction，创建登录方法</span><br></pre></td></tr></table></figure></p>
+<p>@Action(value = “userLogin”, results = { @Result(name = “success”, type = “redirect”, location = “index.html”),<br>            @Result(name = “login”, type = “redirect”, location = “login.html”) })<br>public String userLogin() {<br>    // 获取subject对象，相当于User<br>    Subject subject = SecurityUtils.getSubject();</p>
+<pre><code>// 创建token
+AuthenticationToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
+
+try {
+    subject.login(token); 
+    return SUCCESS;
+} catch (AuthenticationException e) {
+    e.printStackTrace();
+    return LOGIN;
+}
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">以上调用subject的login方法后，shiro底层会操作核心对象SecurityManager安全管理器，在spring配置文件中为SecurityManager注意了一个Realm对象，所以会紧接着调用自动一的Realm对象</span><br><span class="line"></span><br><span class="line">5、创建Reaml对象</span><br></pre></td></tr></table></figure></p>
+<p>package com.leahshi.bos.realm;</p>
+<p>import java.util.List;</p>
+<p>import org.apache.shiro.SecurityUtils;<br>import org.apache.shiro.authc.AuthenticationException;<br>import org.apache.shiro.authc.AuthenticationInfo;<br>import org.apache.shiro.authc.AuthenticationToken;<br>import org.apache.shiro.authc.IncorrectCredentialsException;<br>import org.apache.shiro.authc.SimpleAuthenticationInfo;<br>import org.apache.shiro.authc.UnknownAccountException;<br>import org.apache.shiro.authc.UsernamePasswordToken;<br>import org.apache.shiro.authz.AuthorizationInfo;<br>import org.apache.shiro.authz.SimpleAuthorizationInfo;<br>import org.apache.shiro.realm.AuthorizingRealm;<br>import org.apache.shiro.subject.PrincipalCollection;<br>import org.apache.shiro.subject.Subject;<br>import org.springframework.beans.factory.annotation.Autowired;<br>import org.springframework.stereotype.Service;</p>
+<p>import com.leahshi.bos.domain.system.Permission;<br>import com.leahshi.bos.domain.system.Role;<br>import com.leahshi.bos.domain.system.User;<br>import com.leahshi.bos.service.system.IRoleService;<br>import com.leahshi.bos.service.system.IUserService;</p>
+<p>public class BosRealm extends AuthorizingRealm {<br>    @Autowired<br>    private IUserService userService;</p>
+<pre><code>@Autowired
+private IRoleService roleService;
+
+/**
+ * 认证信息
+ */
+@Override
+public AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException { 
+    // 将token强转为所需的子类token
+    UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
+
+    User user = userService.findByUsername(usernamePasswordToken.getUsername());
+    try {
+        if (user == null) {
+            // 未查到该用户
+            System.out.println(&quot;该用户不存在&quot;);
+            return null;
+        } else {
+
+            /**
+             * 参数分别为：登录后保存到subject中的信息，用户的密码，realm 名称
+             */
+            return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
+        }
+    } catch (IncorrectCredentialsException e) {
+        e.printStackTrace();
+        System.out.println(&quot;密码错误失败！&quot;);
+        return null;
+    } catch (UnknownAccountException e) {
+        e.printStackTrace();
+        System.out.println(&quot;该账户不存在！&quot;);
+        return null;
+    }
+
+} 
+</code></pre><p>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">因为此次登录时按照用户名和密码登录的，所以首先需要将token强转一下；shiro和通常的做法不同，只需要根据对应的用户名查找出用户，如果账户存在 realm自动根据用户输入的密码 匹配 查询出来的密码  </span><br><span class="line">另外，在用户名不存在是会报一个UnknownAccountException的异常，密码错误报IncorrectCredentialsException异常，需要留意。</span><br><span class="line">最后千万别忘记，将自动一的Realm放入到spring容器中，并将Realm注入到SecurityManager中！！！</span><br><span class="line"></span><br><span class="line">6、业务层和数据访问层，只有一个查询的方法，略</span><br><span class="line"></span><br><span class="line">### 2.3、总结：</span><br><span class="line">在这个认证（登录）案例中，并没有体现出shiro权限控制框架的强大之处，可能我们自定义一个filter也可以实现这些功能，拦截某些页面。</span><br><span class="line">初学者可能还会觉得很麻烦，在表现层调用业务层之前还要在依次操作Subject - SecurityManager - Realm，最后还需要调用业务层和dao，</span><br><span class="line">但是接下来的授权管理会真正体现它的强大之处！</span><br><span class="line"></span><br><span class="line">我们可以根据用户认证完成后，存储到subject中的信息，传入到授权的方法中，</span><br><span class="line">根据当前登录的用户在数据库中查询其对应的所有角色信息，根据角色信息可以查询到所有的权限信息，有了权限信息可以实现动态菜单的功能，</span><br><span class="line">不同用户登录系统，根据权限显示不同的菜单选项</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">## 三、使用shiro实现权限控制</span><br><span class="line">提及权限控制，就要涉及到四个实体：用户、角色、权限、菜单 表关系如下：</span><br><span class="line">![](/images/auth.png)</span><br><span class="line"></span><br><span class="line">添加角色信息会关联菜单项，添加用户会关联角色，从而达到不同用户登录系统生成动态菜单项。</span><br><span class="line"></span><br><span class="line">### 3.1、基于粗粒的URL级别权限控制： </span><br><span class="line">在上面提供的spring配置文件中，shiroFilter这个过滤器注入了filterChainDefinitions这个属性，根据上面介绍的就可以达到特定权限和角色可以查看页面的需求。</span><br><span class="line">其原理是由过滤器实现</span><br><span class="line"></span><br><span class="line">### 3.2、基于细粒度方法级别权限控制：</span><br><span class="line">1、在spring配置文件中配置开启权限注解设置，并且要指定动态代理的模式为cglib</span><br></pre></td></tr></table></figure>
+<!-- 激活注解 开启shiro注解模式 -->
+<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"><br>    <!-- 使用cglib动态代理 --><br>    <property name="proxyTargetClass" value="true"></property><br></bean>
+
+<!-- spring容器封装securityManager对象 -->
+<p><bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"><br>    <property name="securityManager" ref="securityManager"></property><br></bean><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2、在自定义realm类中的doGetAuthorizationInfo 添加权限信息的关键字：</span><br></pre></td></tr></table></figure></p>
+<p>/**</p>
+<ul>
+<li><p>权限信息<br>*/<br>@Override<br>public AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection pc) {<br> // 查询当前用户对应的权限<br> SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();<br> Subject subject = SecurityUtils.getSubject();<br> User user = (User) subject.getPrincipal();</p>
+<p> // 查询当前用户对应的角色信息<br> List<role> roles = roleService.findByUserId(user.getId());<br> for (Role role : roles) {</role></p>
+<pre><code>// 为用户添加角色权限  在配置文件中有定义能查看的页面权限限制
+authorizationInfo.addRole(role.getKeyword());
+// 为用户添加权限信息
+for (Permission permission : role.getPermissions()) {
+    authorizationInfo.addStringPermission(permission.getKeyword());
+}
+</code></pre><p> }<br> return authorizationInfo;<br>}<br><code>`</code></p>
+</li>
+</ul>
+<p>3、在具体需要权限控制的类上添加注解：<br>常用的注解有：</p>
+<ul>
+<li>需要特定的角色：@RequiresRoles(value={})</li>
+<li>需要特定的权限：@RequiresPermissions(value = { “keyword1”,”keyword2” }) </li>
+<li>验证是否登录：@RequiresAuthentication</li>
+<li>验证用户是否被记忆，一种是成功登录的，另外一种是被记忆的：@ RequiresUser</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/权限控制/" rel="tag"># 权限控制</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/30/webservice跨系统间数据传输/" rel="next" title="webservice跨系统间数据传输">
+                <i class="fa fa-chevron-left"></i> webservice跨系统间数据传输
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/15/ehcache/" rel="prev" title="Ehcache">
+                Ehcache <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+   <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yNzk5My80NTcw"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Leah Shi" />
+          <p class="site-author-name" itemprop="name">Leah Shi</p>
+          <p class="site-description motion-element" itemprop="description">越努力，越幸运</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/LeahShi" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/shilukl" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、概述"><span class="nav-number">1.</span> <span class="nav-text">一、概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、使用shiro实现用户身份验证"><span class="nav-number">2.</span> <span class="nav-text">二、使用shiro实现用户身份验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1、需求："><span class="nav-number">2.1.</span> <span class="nav-text">2.1、需求：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、实现："><span class="nav-number">2.2.</span> <span class="nav-text">2.2、实现：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leah Shi</span>
+</div>
+
+
+<span id="busuanzi_container_site_pv">
+  Total visited  <span id="busuanzi_value_site_uv"></span>  times
+</span>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("fg8AcWz9u09vwCBg0UiJRmlz-gzGzoHsz", "KFJMzxMzC4ebGCLnh9HBrK6G");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+
+  
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("fg8AcWz9u09vwCBg0UiJRmlz-gzGzoHsz", "KFJMzxMzC4ebGCLnh9HBrK6G");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+});
+</script>
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1282 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-EN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,全文检索," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="ElasticSearch和solr一样都是基于Lucene的搜索服务器，在Lucene提供一套全文检索的API。ElasticSearch用于解决数据量庞大时，关系型数据库查询效率低下的问题。并且它提供分布式多用户能力的开源搜索引擎。ElasticSearch为每个词条创建索引，这些文档中所有词条列表构成倒排索引。当搜索某个词条时，直接找到对应的索引，就像我们再查找字典时，先查找索引中的首字母或">
+<meta name="keywords" content="Java,全文检索">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch入门">
+<meta property="og:url" content="https://leahshi.github.io/2017/08/16/ElasticSearch入门/index.html">
+<meta property="og:site_name" content="Leah&#39;Blog">
+<meta property="og:description" content="ElasticSearch和solr一样都是基于Lucene的搜索服务器，在Lucene提供一套全文检索的API。ElasticSearch用于解决数据量庞大时，关系型数据库查询效率低下的问题。并且它提供分布式多用户能力的开源搜索引擎。ElasticSearch为每个词条创建索引，这些文档中所有词条列表构成倒排索引。当搜索某个词条时，直接找到对应的索引，就像我们再查找字典时，先查找索引中的首字母或">
+<meta property="og:locale" content="zh-EN">
+<meta property="og:updated_time" content="2018-03-31T16:21:16.249Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ElasticSearch入门">
+<meta name="twitter:description" content="ElasticSearch和solr一样都是基于Lucene的搜索服务器，在Lucene提供一套全文检索的API。ElasticSearch用于解决数据量庞大时，关系型数据库查询效率低下的问题。并且它提供分布式多用户能力的开源搜索引擎。ElasticSearch为每个词条创建索引，这些文档中所有词条列表构成倒排索引。当搜索某个词条时，直接找到对应的索引，就像我们再查找字典时，先查找索引中的首字母或">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://leahshi.github.io/2017/08/16/ElasticSearch入门/"/>
+
+
+
+
+
+  <title> ElasticSearch入门 | Leah'Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-EN">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leah'Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">越努力，越幸运</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://leahshi.github.io/2017/08/16/ElasticSearch入门/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Leah Shi">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Leah'Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Leah'Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                ElasticSearch入门
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-16T10:51:23+08:00">
+                2017-08-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/work/" itemprop="url" rel="index">
+                    <span itemprop="name">work</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/16/ElasticSearch入门/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count fb-comments-count" data-href="https://leahshi.github.io/2017/08/16/ElasticSearch入门/" itemprop="commentCount">0</span> comments
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>ElasticSearch和solr一样都是基于Lucene的搜索服务器，在Lucene提供一套全文检索的API。ElasticSearch用于解决数据量庞大时，关系型数据库查询效率低下的问题。并且它提供分布式多用户能力的开源搜索引擎。<br>ElasticSearch为每个词条创建索引，这些文档中所有词条列表构成倒排索引。当搜索某个词条时，直接找到对应的索引，就像我们再查找字典时，先查找索引中的首字母或者偏旁一样。<br>ElasticSearch采用Restful风格，所以都是采用json格式数据传输</p>
+<a id="more"></a>
+<h2 id="一、下载及安装"><a href="#一、下载及安装" class="headerlink" title="一、下载及安装"></a>一、下载及安装</h2><p>ElasticSearch是基于java的开发的，所以在安装jdk配置配置JAVA_HOME后，安装很简单，在<a href="https://www.elastic.co/products/elasticsearch" target="_blank" rel="noopener">官网</a>下载完成后，<br>直接解压，双击bin/elasticsearch.bat 启动服务，访问<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line">安装可视化化工具ES head： </span><br><span class="line">在elasticsearch-x.x.x/bin/plugin.bat 目录下执行**install mobz/elasticsearch-head**命令，安装完成后，重启服务，访问```http://localhost:9200/_plugin/head/```完成安装</span><br><span class="line"></span><br><span class="line">ElasticSearch服务器默认的端口是9300，在浏览器中的端口是9200</span><br><span class="line"></span><br><span class="line">## 二、主要概念</span><br><span class="line">在ElasticSearch搜索服务器中存在着和传统的关系型数据库类似的概念。</span><br><span class="line">- 索引：相当于关系型数据库的表，存储数据的表结构，任何搜索数据存放在索引对象上</span><br><span class="line">- 文档：存储在数据库中的一行记录（数据，由词条搜索得出），存在索引对象上</span><br><span class="line">- 文档类型：一个索引对象可以存储多个不同类型数据，数据用文档类型标识</span><br><span class="line">- 映射：数据如何存放到索引对象上，需要有一个映射配置， 数据类型、是否存储、是否分词 …</span><br><span class="line"></span><br><span class="line">开发ElasticSearch程序顺序：</span><br><span class="line">建立索引对象 - 建立映射 - 存储数据 - 指定文档类型搜索数据 - 查询数据 </span><br><span class="line"></span><br><span class="line">* 注：创建文档时需要指定索引和文档类型，会自动创建索引和添加映射</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 三、快速入门  </span><br><span class="line">引入jar包：</span><br></pre></td></tr></table></figure></p>
+<p><dependency><br>    <groupid>org.elasticsearch</groupid><br>    <artifactid>elasticsearch</artifactid><br>    <version>2.4.0</version><br></dependency><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 1、自动创建索引和文档对象</span><br><span class="line">文档对象格式和映射关系不可自定义，引入IK分词器支持后还需要在文档对象中引用IK分词器！！！</span><br></pre></td></tr></table></figure></p>
+<p>@Test<br>public void test() throws Exception {<br>    // 创建连接搜索服务器对象<br>    Client client = TransportClient.builder().build()<br>            .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(“127.0.0.1”), 9300));<br>            // 可以采用练市编程创建集群搜索服务器<br>            // .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(“127.0.0.1”), 9300));<br>    // 使用XContentBuilder对象 构造json数据<br>    // {id:1,title:””,content:””}<br>    XContentBuilder contentBuilder = XContentFactory.jsonBuilder()<br>            .startObject()<br>                .field(“id”, 1)<br>                .field(“title”, “ElasticSearch是一个基于Lucene的搜索服务器”)<br>                .field(“content”,<br>                    “它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java开发的，并作为Apache许可条款下的开放源码发布，是当前流行的企业级搜索引擎。设计用于云计算中，能够达到实时搜索，稳定，可靠，快速，安装使用方便。”)<br>            .endObject();</p>
+<pre><code>// 创建文档对象 直接在ElasticSearch中建立文档，自动创建索引
+client.prepareIndex(&quot;idx01&quot;, &quot;article&quot;, &quot;1&quot;).setSource(contentBuilder).get();
+
+// 关闭连接
+client.close(); 
+</code></pre><p>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">### 2、基于各种搜索对象搜索文档</span><br></pre></td></tr></table></figure>
+<p>@Test<br>public void test01() throws Exception {<br>    // 创建连接所有服务器对象<br>    Client client = TransportClient.builder().build().addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(“127.0.0.1”), 9300));</p>
+<pre><code>/**
+ *  搜索数据:    
+ *        matchAllQuery ：查询所有匹配条件的结果
+ *         queryStringQuery : 基于分词查询 ，可以根据多个词条进行查询，并对其取交集或者并集 
+ *         fuzzyQuery : 相似度查询
+ *         BoolQuery ： 组合多个查询条件 
+ *        wildcardQuery ： 模糊查询，在左右两侧加上 * 而不是 % ！！！
+ *         termQuery() 和  wildcardQuery 类似基于词条查询  并且是基于默认词条查询 一个字一个字匹配
+ */
+
+SearchResponse response = client.prepareSearch(&quot;idx01&quot;).setTypes(&quot;article&quot;).setQuery(QueryBuilders.matchAllQuery()).get();      
+
+// SearchResponse response = client.prepareSearch(&quot;idx01&quot;).setTypes(&quot;article&quot;).setQuery(QueryBuilders.queryStringQuery(&quot;搜索&quot;)).get();
+
+// SearchResponse response = client.prepareSearch(&quot;idx01&quot;).setTypes(&quot;article&quot;).setQuery(QueryBuilders.wildcardQuery(&quot;content&quot;, &quot;*搜索*&quot;)).get();
+
+// SearchResponse response = client.prepareSearch(&quot;idx01&quot;).setTypes(&quot;article&quot;).setQuery(QueryBuilders.termQuery(&quot;content&quot;, &quot;搜索&quot;)).get();
+
+// 打印并输出
+SearchHits hits = response.getHits();
+System.out.println(&quot;总条数&quot; + hits.getTotalHits());
+Iterator&lt;SearchHit&gt; iterator = hits.iterator();
+while (iterator.hasNext()) {
+    // 获取每个查询对象
+    SearchHit hit = iterator.next();
+    // 获取每个对象内容
+    System.out.println(hit.getSourceAsString());
+    // 获取具体的某个字段
+    System.out.println(&quot;title:&quot; + hit.getSource().get(&quot;title&quot;));
+}
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">以上测试类，只有matchAllQuery可以 返回所有数据，queryStringQuery也可以返回数据，wildcardQuery和termQuery均不能返回结果。</span><br><span class="line">按照定义，&quot;搜索&quot;这个词条应该存在ElasticSearch索引库中，为什么查不到呢？这是因为ElasticSearch对中文支持很差，基本上是按照一个字一个字分词，所以需要引入第三方分词器对中文进行分词。</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">## 四、分词器介绍 </span><br><span class="line">### 1、安装与配置</span><br><span class="line">在开发中我们常用的是ik分词器集成ElasticSearch来使用，ik分词器是一个开源的基于java开发的轻量级中文分词工具包。</span><br><span class="line">第一步：[戳这里下载](https://github.com/medcl/elasticsearch-analysis-ik/tree/2.x) </span><br><span class="line">第二步：下载完成后，进入 target/release 目录，将除了 elasticsearch-analysis-ik-x.x.x 目录外所有文件；拷贝到 %es%/plugins/analysis-ik下</span><br><span class="line">第三步：进入 target/release/config 目录，将所有配置文件，复制 %es%/config 下；</span><br><span class="line">第四步：配置 config/elasticsearch.yml，在最后加上 【index.analysis.analyzer.ik.type: &quot;ik&quot;】</span><br><span class="line"></span><br><span class="line">### 2、ik分词器集成ElasticSearch</span><br></pre></td></tr></table></figure></p>
+<p>@Test<br>public void test02() throws Exception {<br>    Client client = TransportClient.builder().build()<br>            .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(“127.0.0.1”), 9300));</p>
+<pre><code>// 1、手动创建索引 
+client.admin().indices().prepareCreate(&quot;idx02&quot;).get(); 
+// 删除索引
+// client.admin().indices().prepareDelete(&quot;idx02&quot;).get();
+
+// 2、添加映射 凭借json数据 {&quot;mappding&quot;:{&quot;article&quot;:{&quot;properties&quot;:{&quot;id&quot;:{&quot;type&quot;:&quot;&quot;,&quot;store&quot;,&quot;&quot;},&quot;title&quot;:{&quot;type&quot;:&quot;&quot;,&quot;store&quot;,&quot;&quot;},&quot;content&quot;:{&quot;type&quot;:&quot;&quot;,&quot;store&quot;,&quot;&quot;}}}}}
+XContentBuilder builder = XContentFactory.jsonBuilder()
+        .startObject()
+            .startObject(&quot;article&quot;)
+                .startObject(&quot;properties&quot;)
+                    .startObject(&quot;id&quot;).field(&quot;type&quot;, &quot;integer&quot;).field(&quot;store&quot;, &quot;yes&quot;).endObject()
+                    .startObject(&quot;title&quot;).field(&quot;type&quot;, &quot;string&quot;).field(&quot;store&quot;, &quot;yes&quot;).field(&quot;analyzer&quot;, &quot;ik&quot;).endObject()
+                    .startObject(&quot;content&quot;).field(&quot;type&quot;, &quot;string&quot;).field(&quot;store&quot;, &quot;yes&quot;).field(&quot;analyzer&quot;, &quot;ik&quot;).endObject()
+                .endObject()
+            .endObject()
+        .endObject();
+
+PutMappingRequest mapping = Requests.putMappingRequest(&quot;idx01&quot;).type(&quot;article&quot;).source(builder);
+client.admin().indices().putMapping(mapping).get();
+
+
+// 文档对象
+client.close();
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">以上测试方法执行完成后，在http://localhost:9200/_plugin/head/ 可以看到，已经创建了一个idx02索引库</span><br></pre></td></tr></table></figure></p>
+<p>// 文档操作<br>@Test<br>public void test03() throws Exception {<br>    // 创建连接搜索服务器对象<br>    Client client = TransportClient.builder().build()<br>            .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(“127.0.0.1”), 9300));</p>
+<pre><code>// 根据返回实体转换json封装索引
+Article article = new Article();
+article.setId(2);
+article.setTitle(&quot;Elasticsearch相关介绍&quot;);
+article.setContent(&quot;Elasticsearch （ES）是一个基于 Lucene 的开源搜索引擎，它不但稳定、可靠、快速，而且也具有良好的水平扩展能力，是专门为分布式环境设计的。&quot;);
+
+// jackson
+ObjectMapper mapper = new ObjectMapper();
+
+// 创建文档
+client.prepareIndex(&quot;idx02&quot;, &quot;article&quot;, article.getId().toString()).setSource(mapper.writeValueAsString(article)).get();
+
+// 删除文档
+//client.prepareDelete(&quot;idx02&quot;, &quot;article&quot;, article.getId().toString()).get();
+//client.delete(new DeleteRequest(&quot;idx02&quot;, &quot;article&quot;, article.getId().toString())).get();
+
+
+// 修改文档
+//client.prepareUpdate(&quot;idx02&quot;, &quot;article&quot;, article.getId().toString()).setDoc(mapper.writeValueAsString(article)).get();
+//client.update(new UpdateRequest(&quot;idx02&quot;, &quot;article&quot;, article.getId().toString())).get();
+client.close();
+</code></pre><p>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">在idx02索引库中可以看到已经有一条数据已经插入</span><br></pre></td></tr></table></figure>
+<p>// 分页搜索<br>@Test<br>public void test04() throws Exception{<br>    // 创建连接搜索服务器对象<br>    Client client = TransportClient.builder().build()<br>            .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(“127.0.0.1”), 9300));</p>
+<pre><code>ObjectMapper mapper = new ObjectMapper();
+
+// 批量查询记录
+for (int i = 1; i &lt;= 100; i++) {
+    // 描述json 数据
+    Article article = new Article();
+    article.setId(i);
+    article.setTitle(i+&quot;Elasticsearch相关介绍&quot;);
+    article.setContent(i+&quot;Elasticsearch （ES）是一个基于 Lucene 的开源搜索引擎，它不但稳定、可靠、快速，而且也具有良好的水平扩展能力，是专门为分布式环境设计的。&quot;);
+
+    // 建立文档 
+    client.prepareIndex(&quot;idx02&quot;, &quot;article&quot;, article.getId().toString())
+            .setSource(mapper.writeValueAsString(article)).get();
+} 
+
+ // 根据title字段中 包含&quot;搜索&quot; 这个词条 的结果集进行分页查询
+SearchRequestBuilder requestBuilder = client.prepareSearch(&quot;idx01&quot;).setTypes(&quot;article&quot;).setQuery(QueryBuilders.termQuery(&quot;title&quot;, &quot;搜索&quot;));
+
+// 查询第二页 每页显示20条  不进行分页的情况下默认是返回10条
+int pageNo = 1;
+int pageSize = 20;
+requestBuilder.setFrom((pageNo-1)*pageSize).setSize(pageSize);
+
+SearchResponse response = requestBuilder.get();
+
+
+// 打印并输出
+SearchHits hits = response.getHits();
+System.out.println(&quot;总条数&quot; + hits.getTotalHits());
+Iterator&lt;SearchHit&gt; iterator = hits.iterator();
+while (iterator.hasNext()) {
+    // 获取每个查询对象
+    SearchHit hit = iterator.next();
+    // 获取每个对象内容
+    System.out.println(hit.getSourceAsString());
+    // 获取具体的某个字段
+    System.out.println(&quot;title:&quot; + hit.getSource().get(&quot;title&quot;));
+}
+
+client.close();
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">在控制台中就返回了20条数据，因为没有排序，所以返回的id不是连续的</span><br><span class="line">在很多全文搜索服务中，会对关键字进行高亮显示，原理很简单，就是在搜索关键在的周围定义一个标签，并对标签定义样式</span><br></pre></td></tr></table></figure></p>
+<p>// 高亮显示处理<br>@Test<br>public void test05() throws Exception {<br>    // 创建连接搜索服务器对象<br>    Client client = TransportClient.builder().build()<br>            .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(“127.0.0.1”), 9300));</p>
+<pre><code>ObjectMapper objectMapper = new ObjectMapper();
+
+// 搜索数据
+SearchRequestBuilder searchRequestBuilder = client.prepareSearch(&quot;idx01&quot;).setTypes(&quot;article&quot;)
+        .setQuery(QueryBuilders.termQuery(&quot;content&quot;, &quot;搜索&quot;));
+
+// 高亮定义
+searchRequestBuilder.addHighlightedField(&quot;content&quot;); // 对title字段进行高亮
+searchRequestBuilder.setHighlighterPreTags(&quot;&lt;em&gt;&quot;); // 前置元素
+searchRequestBuilder.setHighlighterPostTags(&quot;&lt;/em&gt;&quot;);// 后置元素
+
+SearchResponse searchResponse = searchRequestBuilder.get();
+
+SearchHits hits = searchResponse.getHits(); // 获取命中次数，查询结果有多少对象
+System.out.println(&quot;查询结果有：&quot; + hits.getTotalHits() + &quot;条&quot;);
+Iterator&lt;SearchHit&gt; iterator = hits.iterator();
+while (iterator.hasNext()) {
+    SearchHit searchHit = iterator.next(); // 每个查询对象
+
+    // 将高亮处理后内容，替换原有内容 （原有内容，可能会出现显示不全 ）
+    Map&lt;String, HighlightField&gt; highlightFields = searchHit.getHighlightFields();
+    HighlightField titleField = highlightFields.get(&quot;content&quot;);
+
+    // 获取到原有内容中 每个高亮显示 集中位置 fragment 就是高亮片段
+    Text[] fragments = titleField.fragments();
+    String title = &quot;&quot;;
+    for (Text text : fragments) {
+        // text将一条数据的该字段切分
+        title += text;
+    }
+    // 将查询结果转换为对象
+    Article article = objectMapper.readValue(searchHit.getSourceAsString(), Article.class);
+
+    // 用高亮后内容，替换原有内容
+    article.setTitle(title);
+
+    System.out.println(article);
+}
+
+// 关闭连接
+client.close();
+</code></pre><p>}<br><code>`</code></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/全文检索/" rel="tag"># 全文检索</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/30/React Native之常用组件介绍/" rel="next" title="React Native之常用组件介绍">
+                <i class="fa fa-chevron-left"></i> React Native之常用组件介绍
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/30/Spring Data ElasticSearch/" rel="prev" title="Spring Data ElasticSearch快速入门">
+                Spring Data ElasticSearch快速入门 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+   <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yNzk5My80NTcw"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Leah Shi" />
+          <p class="site-author-name" itemprop="name">Leah Shi</p>
+          <p class="site-description motion-element" itemprop="description">越努力，越幸运</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/LeahShi" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/shilukl" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、下载及安装"><span class="nav-number">1.</span> <span class="nav-text">一、下载及安装</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leah Shi</span>
+</div>
+
+
+<span id="busuanzi_container_site_pv">
+  Total visited  <span id="busuanzi_value_site_uv"></span>  times
+</span>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("fg8AcWz9u09vwCBg0UiJRmlz-gzGzoHsz", "KFJMzxMzC4ebGCLnh9HBrK6G");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+
+  
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("fg8AcWz9u09vwCBg0UiJRmlz-gzGzoHsz", "KFJMzxMzC4ebGCLnh9HBrK6G");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+});
+</script>
+
+  
+
+</body>
+</html>

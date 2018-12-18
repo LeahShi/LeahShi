@@ -1,0 +1,1136 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-EN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hack,CSS,IE," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="常见问题：1、margin加倍的问题：【margin双边距问题】当元素有float属性，又有margin属性时，在IE6下面显示的margin的值是设置值的两倍。这个是IE6比较著名的BUG。解决方法： _display:inline。">
+<meta name="keywords" content="Hack,CSS,IE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IE浏览器兼容性总结">
+<meta property="og:url" content="https://leahshi.github.io/2015/11/08/IE浏览器兼容性总结/index.html">
+<meta property="og:site_name" content="Leah&#39;Blog">
+<meta property="og:description" content="常见问题：1、margin加倍的问题：【margin双边距问题】当元素有float属性，又有margin属性时，在IE6下面显示的margin的值是设置值的两倍。这个是IE6比较著名的BUG。解决方法： _display:inline。">
+<meta property="og:locale" content="zh-EN">
+<meta property="og:updated_time" content="2018-03-31T13:57:42.289Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IE浏览器兼容性总结">
+<meta name="twitter:description" content="常见问题：1、margin加倍的问题：【margin双边距问题】当元素有float属性，又有margin属性时，在IE6下面显示的margin的值是设置值的两倍。这个是IE6比较著名的BUG。解决方法： _display:inline。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://leahshi.github.io/2015/11/08/IE浏览器兼容性总结/"/>
+
+
+
+
+
+  <title> IE浏览器兼容性总结 | Leah'Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-EN">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Leah'Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">越努力，越幸运</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://leahshi.github.io/2015/11/08/IE浏览器兼容性总结/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Leah Shi">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Leah'Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Leah'Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                IE浏览器兼容性总结
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-08T11:08:01+08:00">
+                2015-11-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/work/" itemprop="url" rel="index">
+                    <span itemprop="name">work</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/11/08/IE浏览器兼容性总结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count fb-comments-count" data-href="https://leahshi.github.io/2015/11/08/IE浏览器兼容性总结/" itemprop="commentCount">0</span> comments
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="常见问题："><a href="#常见问题：" class="headerlink" title="常见问题："></a>常见问题：</h2><h3 id="1、margin加倍的问题：【margin双边距问题】"><a href="#1、margin加倍的问题：【margin双边距问题】" class="headerlink" title="1、margin加倍的问题：【margin双边距问题】"></a>1、margin加倍的问题：【margin双边距问题】</h3><p>当元素有<strong>float</strong>属性，又有<strong>margin</strong>属性时，在IE6下面显示的margin的值是设置值的两倍。这个是IE6比较著名的BUG。<br>解决方法： _display:inline。</p>
+<a id="more"></a>
+<h3 id="2、IE6图片底侧会有像素间隙问题-："><a href="#2、IE6图片底侧会有像素间隙问题-：" class="headerlink" title="2、IE6图片底侧会有像素间隙问题 ："></a>2、IE6图片底侧会有像素间隙问题 ：</h3><p>解决方法：<br>a. 将img标记与/div标记放在同一行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;&lt;img src=&quot;images/jd.gif&quot; /&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure></p>
+<p>但是这样写不太方便阅读，我们知道代码的可读性是最为重要的。<br>b. 在CSS样式中给img上设置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">img&#123;display:block;&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="IE6下元素最小高度的问题："><a href="#IE6下元素最小高度的问题：" class="headerlink" title="IE6下元素最小高度的问题："></a>IE6下元素最小高度的问题：</h3><p>IE6浏览器里面有个默认的高度（行高）；19px以下的高度均不可设置；<br>解决方法：<br>overflow:hidden；font-size:0;</p>
+<h3 id="IE6显示多余字符问题："><a href="#IE6显示多余字符问题：" class="headerlink" title="IE6显示多余字符问题："></a>IE6显示多余字符问题：</h3><p>在IE6下，当在浮动元素之间增加HTML注释时就会产生多余字符bug.<br>解决办法：</p>
+<ul>
+<li>可以考虑去掉HTML注释。</li>
+<li>不设置浮动div的宽度。(如果可以不用加宽度)</li>
+<li>在产生多余字符的那个元素CSS样式加position:relative;</li>
+</ul>
+<h3 id="IE6下文字混排浮动3px间距BUG："><a href="#IE6下文字混排浮动3px间距BUG：" class="headerlink" title="IE6下文字混排浮动3px间距BUG："></a>IE6下文字混排浮动3px间距BUG：</h3><p>在IE6中，当文本(或无浮动元素)跟在一个浮动的元素之后，文本和这个浮动元素之间会多出3px的间隔。<br>如果元素左浮动或右浮动，则后面的行内文本环绕该元素时浮动与环绕文本之间会增加3px外边距，其他浏览器正常。<br>解决办法：外边距可以是负值，所以给这个浮动的盒子加margin-right：-3像素的距离。</p>
+<h3 id="IE6下li里底部3px间距BUG："><a href="#IE6下li里底部3px间距BUG：" class="headerlink" title="IE6下li里底部3px间距BUG："></a>IE6下li里底部3px间距BUG：</h3><p>如果li里面内容过于复杂，那么li和li之间就出现白空隙。<br>解决方法：vertical-align: middle  bottom等</p>
+<h3 id="IE6中奇数宽高的BUG-："><a href="#IE6中奇数宽高的BUG-：" class="headerlink" title="IE6中奇数宽高的BUG ："></a>IE6中<strong>奇数</strong>宽高的BUG ：</h3><p>IE6还有奇数宽高的bug，<br>解决方案:就是将外部相对定位的div宽度改成偶数。</p>
+<h3 id="了解ie6盒子会撑高的特性-："><a href="#了解ie6盒子会撑高的特性-：" class="headerlink" title="了解ie6盒子会撑高的特性 ："></a>了解ie6盒子会撑高的特性 ：</h3><p>内容有多大，盒子就撑多大【设置高度无用】<br>解决方法：父标签使用overflow:hidden</p>
+<h3 id="左浮元素margin-bottom失效-："><a href="#左浮元素margin-bottom失效-：" class="headerlink" title="左浮元素margin-bottom失效 ："></a>左浮元素margin-bottom失效 ：</h3><p>解决方法：margin-bottom与float不同时作用于一个标签；</p>
+<h3 id="块元素中有文字及右浮动的行元素，行元素换行-："><a href="#块元素中有文字及右浮动的行元素，行元素换行-：" class="headerlink" title="块元素中有文字及右浮动的行元素，行元素换行 ："></a>块元素中有文字及右浮动的行元素，行元素换行 ：</h3><p>解决方法：将行元素置于块元素内的文字前</p>
+<h3 id="position下的left，bottom错位"><a href="#position下的left，bottom错位" class="headerlink" title="position下的left，bottom错位"></a>position下的left，bottom错位</h3><p>解决方法：为父级(relative层)设置宽高或添加*zoom:1</p>
+<h3 id="IE6背景闪烁"><a href="#IE6背景闪烁" class="headerlink" title="IE6背景闪烁"></a>IE6背景闪烁</h3><p>如果你给链接、按钮用CSS sprites作为背景，你可能会发现在IE6下会有背景图闪烁的现象。造成这个的原因是由于IE6没有将背景图缓存，每次触发hover的时候都会重新加载，可以用JavaScript设置IE6缓存这些图片：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document.execCommand(&quot;BackgroundImageCache&quot;,false,true);</span><br></pre></td></tr></table></figure></p>
+<h3 id="IE6-不支持min-height属性，认为height就是最小高度"><a href="#IE6-不支持min-height属性，认为height就是最小高度" class="headerlink" title="IE6 不支持min-height属性，认为height就是最小高度"></a>IE6 不支持min-height属性，认为height就是最小高度</h3><p>解决方法：使用ie6不支持但其余浏览器支持的属性!important。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#container &#123;min-height:200px; height:auto !important; height:200px;&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="针对IE各个版本解决方案——hacker前缀："><a href="#针对IE各个版本解决方案——hacker前缀：" class="headerlink" title="针对IE各个版本解决方案——hacker前缀："></a>针对IE各个版本解决方案——hacker前缀：</h2><h3 id="ie6以下："><a href="#ie6以下：" class="headerlink" title="ie6以下："></a>ie6以下：</h3><pre><code>语法：_selector:{属性：值；}
+</code></pre><h3 id="ie7以下："><a href="#ie7以下：" class="headerlink" title="ie7以下："></a>ie7以下：</h3><pre><code>语法：+selector:{属性：值；}
+</code></pre><h3 id="ie7专属："><a href="#ie7专属：" class="headerlink" title="ie7专属："></a>ie7专属：</h3><pre><code>语法：*+selector:{属性：值；}
+</code></pre><h3 id="CSS后缀hack-针对的浏览器"><a href="#CSS后缀hack-针对的浏览器" class="headerlink" title="CSS后缀hack        针对的浏览器"></a>CSS后缀hack        针对的浏览器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">color:red\9;        IE6/IE7/IE8/IE9/IE10版本</span><br><span class="line">color:red\0;        IE8/IE9/IE10版本</span><br><span class="line">color:red\9\0;        IE9/IE10</span><br><span class="line">    /*mediaQuery*/</span><br><span class="line">@media screen\9&#123;body &#123; background: red; &#125;&#125;    只对IE6/7生效</span><br><span class="line">@media \0screen &#123;body &#123; background: red; &#125;&#125;    只对IE8生效</span><br><span class="line">@media \0screen\,screen\9&#123;body &#123; background: blue; &#125;&#125;    只对IE6/7/8有效</span><br><span class="line">@media screen\0 &#123;body &#123; background: green; &#125;&#125;    只对IE8/9/10有效</span><br><span class="line">@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) &#123;body &#123; background: orange; &#125;&#125;    只对IE10有效</span><br></pre></td></tr></table></figure>
+<h3 id="条件注释：【缺点是在IE浏览器下可能会增加额外的HTTP请求数。】"><a href="#条件注释：【缺点是在IE浏览器下可能会增加额外的HTTP请求数。】" class="headerlink" title="条件注释：【缺点是在IE浏览器下可能会增加额外的HTTP请求数。】"></a>条件注释：【缺点是在IE浏览器下可能会增加额外的HTTP请求数。】</h3><p>1.判断等于某个IE浏览器版本的语法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">语法：&lt;!--[if IE 7]&gt;只能被 IE7 识别;&lt;![endif]--&gt;</span><br><span class="line">例如：   &lt;!--[if ie 5]&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/c.css&quot;&gt;&lt;![endif]--&gt;</span><br></pre></td></tr></table></figure></p>
+<p>2.判断IE浏览器的范围：<br>gte,gt,lte,lt<br>其中： gte:表示高于或等于某个IE浏览的版本 gt:表示高于某个IE浏览器的版本<br>                    lte:表示低于或等于某个IE浏览器的版本 lt:表示低于某个IE浏览器的版本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">语法：&lt;!--[if gte ie 版本号]&gt;要判断的内容&lt;![endif]--&gt;</span><br><span class="line">例如：&lt;!--[if gte ie 5]&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/c.css&quot;&gt;&lt;![endif]--&gt;</span><br></pre></td></tr></table></figure></p>
+<p>3.判断非IE浏览器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">语法： &lt;!--[if ! ie]&gt;&lt;!--&gt;要判断的内容&lt;!--&lt;![endif]--&gt;</span><br><span class="line">例如：&lt;!--[if ! ie]&gt;&lt;!--&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/c.css&quot;&gt;&lt;!--&lt;![endif]--&gt;</span><br></pre></td></tr></table></figure></p>
+<p>4.判断是IE浏览器 语法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--[if ie]&gt;要判断的内容&lt;![endif]--&gt;</span><br><span class="line">例如： &lt;!--[if ie]&gt;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/c.css&quot;&gt;&lt;![endif]--&gt;</span><br></pre></td></tr></table></figure></p>
+<p>5.其他ie判断 ：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--[if lt IE 7]&gt; 内容&lt;![endif]--&gt;: 小于 IE7 的版本 ( Less than )；</span><br><span class="line">&lt;!--[if lte IE 7]&gt; 内容&lt;![endif]--&gt;: 小于或等于 IE7 的版本 ( Less than or equal )；</span><br><span class="line">&lt;!--[if gt IE 7]&gt; 内容&lt;![endif]--&gt;: 大于 IE7 的版本 ( Greater than )；</span><br><span class="line">&lt;!--[if gte IE 7]&gt; 内容&lt;![endif]--&gt;: 大于或等于 IE7 的版本 ( Greater than or equal )；</span><br><span class="line">&lt;!--[if !IE 7]&gt;内容&lt;![endif]--&gt; : 不等于 IE7 的版本 ( Not )；</span><br><span class="line">&lt;!--[if !IE]&gt;&lt;!--&gt;您使用不是 Internet Explorer&lt;!--&lt;![endif]--&gt;  不是IE浏览器</span><br><span class="line">gt:大于不包括；lt:小于不包括；gte：大于包括；lte:小于包括；！除此之外；</span><br></pre></td></tr></table></figure></p>
+<p><strong>注意：顺序千万不要乱，因为当出现重复定义时，浏览器默认按最后一下渲染，所以一定要先正常，再*，最后_。</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hack/" rel="tag"># Hack</a>
+          
+            <a href="/tags/CSS/" rel="tag"># CSS</a>
+          
+            <a href="/tags/IE/" rel="tag"># IE</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/29/meta标签总结/" rel="next" title="meta标签总结">
+                <i class="fa fa-chevron-left"></i> meta标签总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/15/hexo版本控制及配置文件备份/" rel="prev" title="hexo配置文件备份总结">
+                hexo配置文件备份总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+   <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yNzk5My80NTcw"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Leah Shi" />
+          <p class="site-author-name" itemprop="name">Leah Shi</p>
+          <p class="site-description motion-element" itemprop="description">越努力，越幸运</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/LeahShi" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/shilukl" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#常见问题："><span class="nav-number">1.</span> <span class="nav-text">常见问题：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、margin加倍的问题：【margin双边距问题】"><span class="nav-number">1.1.</span> <span class="nav-text">1、margin加倍的问题：【margin双边距问题】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、IE6图片底侧会有像素间隙问题-："><span class="nav-number">1.2.</span> <span class="nav-text">2、IE6图片底侧会有像素间隙问题 ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IE6下元素最小高度的问题："><span class="nav-number">1.3.</span> <span class="nav-text">IE6下元素最小高度的问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IE6显示多余字符问题："><span class="nav-number">1.4.</span> <span class="nav-text">IE6显示多余字符问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IE6下文字混排浮动3px间距BUG："><span class="nav-number">1.5.</span> <span class="nav-text">IE6下文字混排浮动3px间距BUG：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IE6下li里底部3px间距BUG："><span class="nav-number">1.6.</span> <span class="nav-text">IE6下li里底部3px间距BUG：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IE6中奇数宽高的BUG-："><span class="nav-number">1.7.</span> <span class="nav-text">IE6中奇数宽高的BUG ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#了解ie6盒子会撑高的特性-："><span class="nav-number">1.8.</span> <span class="nav-text">了解ie6盒子会撑高的特性 ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#左浮元素margin-bottom失效-："><span class="nav-number">1.9.</span> <span class="nav-text">左浮元素margin-bottom失效 ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#块元素中有文字及右浮动的行元素，行元素换行-："><span class="nav-number">1.10.</span> <span class="nav-text">块元素中有文字及右浮动的行元素，行元素换行 ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#position下的left，bottom错位"><span class="nav-number">1.11.</span> <span class="nav-text">position下的left，bottom错位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IE6背景闪烁"><span class="nav-number">1.12.</span> <span class="nav-text">IE6背景闪烁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IE6-不支持min-height属性，认为height就是最小高度"><span class="nav-number">1.13.</span> <span class="nav-text">IE6 不支持min-height属性，认为height就是最小高度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#针对IE各个版本解决方案——hacker前缀："><span class="nav-number">2.</span> <span class="nav-text">针对IE各个版本解决方案——hacker前缀：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ie6以下："><span class="nav-number">2.1.</span> <span class="nav-text">ie6以下：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ie7以下："><span class="nav-number">2.2.</span> <span class="nav-text">ie7以下：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ie7专属："><span class="nav-number">2.3.</span> <span class="nav-text">ie7专属：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS后缀hack-针对的浏览器"><span class="nav-number">2.4.</span> <span class="nav-text">CSS后缀hack        针对的浏览器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#条件注释：【缺点是在IE浏览器下可能会增加额外的HTTP请求数。】"><span class="nav-number">2.5.</span> <span class="nav-text">条件注释：【缺点是在IE浏览器下可能会增加额外的HTTP请求数。】</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leah Shi</span>
+</div>
+
+
+<span id="busuanzi_container_site_pv">
+  Total visited  <span id="busuanzi_value_site_uv"></span>  times
+</span>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("fg8AcWz9u09vwCBg0UiJRmlz-gzGzoHsz", "KFJMzxMzC4ebGCLnh9HBrK6G");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+
+  
+  <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("fg8AcWz9u09vwCBg0UiJRmlz-gzGzoHsz", "KFJMzxMzC4ebGCLnh9HBrK6G");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+});
+</script>
+
+  
+
+</body>
+</html>
